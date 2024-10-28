@@ -3,21 +3,21 @@ Chat application (StarkComm)
 --> Project Structure :
 
 chat_app/
-├── app.py                      # Main application
-├── templates/                  # HTML templates
-│   ├── index.html              # Chat interface
-│   ├── login.html              # User login page
-│   └── signup.html             # User sign-up page
-├── static/                     # Static files
-│   ├── css/                    # CSS files
-│   │   └── style.css           # Stylesheet
-│   ├── images/                 # Image files
-│   │   ├── logo.png            # Example logo 
-│   │   ├── background.jpg      # Example background image 
-│   └── js/                     # JavaScript files
-│       ├── main.js             # Main JavaScript file
-│       └── script.js           # Additional JavaScript file
-└── README.md                   # Project documentation
+├── app.py                      
+├── templates/                  
+│   ├── index.html              
+│   ├── login.html              
+│   └── signup.html             
+├── static/                     
+│   ├── css/                    
+│   │   └── style.css          
+│   ├── images/                 
+│   │   ├── logo.png            
+│   │   ├── background.jpg      
+│   └── js/                    
+│       ├── main.js            
+│       └── script.js           
+└── README.md                   
 
 
 
