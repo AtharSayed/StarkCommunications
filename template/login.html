@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            background-image: url('{{ url_for("static", filename="images/loginpagewallpaperbacg.jpg") }}');
+            background-size: cover; /* Cover the entire background */
+            background-position: center; /* Center the background image */
+            height: 100vh; /* Full viewport height */
+            color: white; /* Change text color to white for visibility */
+        }
+        .card {
+            max-width: 400px; /* Max width for card */
+            width: 90%; /* Responsive width */
+        }
+        .card-body {
+            display: flex;                
+            flex-direction: column;       
+            align-items: center;          
+            justify-content: center;      
+        }
+        .logo-img {
+            max-width: 80%;               
+            height: auto;                 
+        }
+        .alert {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container d-flex align-items-center justify-content-center vh-100">
+        <div class="card shadow">
+            <div class="card-body text-center">
+                <img src="{{ url_for('static', filename='images/1200px-Stark_Industries.png') }}" alt="Logo" class="logo-img mb-3"> 
+                <h5 class="card-title">StarkComm</h5>
+
+                {% if error %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+                {% endif %}
+
+                <form method="POST" action="{{ url_for('login') }}">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" class="form-control" id="username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Login</button>
+                    <div class="text-center mt-3">
+                        <small>Don't have an account? <a href="{{ url_for('signup') }}">Sign up</a></small>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

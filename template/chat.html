@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Room</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            background-image: url('{{ url_for("static", filename="images/chatwallpaperbcg.jpg") }}');
+            background-size: cover; /* Cover the entire background */
+            background-position: center; /* Center the background image */
+            height: 100vh; /* Full viewport height */
+            color: white; /* Change text color to white for visibility */
+            margin: 0; /* Remove default body margin */
+        }
+        .chat-container {
+            max-width: 800px; /* Max width for chat */
+            width: 90%; /* Responsive width */
+            margin: auto; /* Centered container */
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Light shadow */
+            background-color: rgba(255, 255, 255, 0.8); /* White background with transparency */
+            display: flex;
+            flex-direction: column;
+            height: 80%; /* Responsive height */
+            justify-content: center;
+        }
+        .chat-window {
+            flex-grow: 1; /* Allow chat window to grow */
+            overflow-y: auto; /* Enable scrolling */
+            padding: 20px; /* Padding inside chat window */
+            border: 1px solid #ccc; /* Border for chat window */
+            border-radius: 0 0 10px 10px; /* Rounded corners on bottom */
+            background-color: #fff; /* White background for messages */
+        }
+        .message {
+            padding: 10px; /* Padding for each message */
+            border-radius: 5px; /* Rounded corners for messages */
+            margin-bottom: 10px; /* Space between messages */
+            max-width: 75%; /* Limit width */
+            word-wrap: break-word; /* Ensure long words break properly */
+        }
+        .message.sent {
+            background-color: #007bff; /* Sent message background */
+            color: white; /* Sent message text color */
+            align-self: flex-end; /* Align sent messages to the right */
+        }
+        .message.received {
+            background-color: #e5e5ea; /* Received message background */
+            color: black; /* Received message text color */
+            align-self: flex-start; /* Align received messages to the left */
+        }
+        .input-group {
+            margin-top: 10px; /* Space above input group */
+        }
+    </style>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script>
+        const socket = io();  // Connect to the SocketIO server
+
+        socket.on('connect', () => {
+            console.log('Connected to server');
+        });
+
+        function sendMessage() {
+            const message = document.getElementById('message').value;
+            const recipient = document.getElementById('recipient').value;
+            const sender = "{{ username }}";  // Use Flask to insert the username
+
+            if (message.trim() !== '') { // Ensure message is not empty
+                socket.emit('send_message', { sender, recipient, message });
+                document.getElementById('message').value = '';  // Clear the input
+            }
+        }
+
+        socket.on('chat message', (data) => {
+            console.log(`Received message from ${data.sender}: ${data.message}`);
+            const chatWindow = document.getElementById('chat-window');
+            const messageElement = document.createElement('div');
+            messageElement.textContent = `${data.sender}: ${data.message}`;
+            messageElement.classList.add('message', data.sender === "{{ username }}" ? 'sent' : 'received'); // Determine message type
+            chatWindow.appendChild(messageElement);
+            chatWindow.scrollTop = chatWindow.scrollHeight; // Scroll to the bottom
+        });
+
+        socket.on('user_list', (userList) => {
+            console.log('Connected users:', userList);
+        });
+    </script>
+</head>
+<body>
+    <div class="d-flex align-items-center justify-content-center vh-100">
+        <div class="chat-container">
+            <h2 class="text-center mt-3">Chat Room</h2>
+            <div id="chat-window" class="chat-window d-flex flex-column">
+                <!-- Messages will be displayed here -->
+            </div>
+            <div class="input-group">
+                <input id="recipient" type="text" class="form-control" placeholder="Recipient" required>
+                <input id="message" type="text" class="form-control" placeholder="Message" required>
+                <div class="input-group-append">
+                    <button class="btn btn-primary" onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

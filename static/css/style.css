@@ -1,0 +1,56 @@
+body {
+    /* Gradient background for a soft look */
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+    color: white;
+}
+
+.card {
+    border-radius: 15px; /* Rounded corners */
+    background-color: rgba(255, 255, 255, 0.9); /* Light background for card */
+    padding: 20px; /* Padding for inner content */
+}
+
+.card-title {
+    margin-bottom: 20px;
+    font-weight: bold; /* Emphasize the title */
+    color: #333; /* Darker title color */
+}
+
+.btn-primary {
+    background-color: #007bff; /* Primary button color */
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* Darker on hover */
+}
+
+.form-control {
+    border-radius: 20px; /* Rounded input fields */
+    background-color: #f8f9fa; /* Light background for input fields */
+    border: 1px solid #007bff; /* Blue border */
+    transition: border-color 0.3s; /* Smooth transition for focus */
+}
+
+.form-control:focus {
+    box-shadow: none; /* Remove shadow on focus */
+    border: 2px solid #0056b3; /* Darker border on focus */
+}
+
+/* Add black color for the labels */
+label {
+    color: black; /* Black color for labels */
+}
+
+small a {
+    color: #007bff; /* Link color */
+}
+
+small a:hover {
+    text-decoration: underline; /* Underline on hover */
+}
+
+/* Black color for the "Don't have an account?" text */
+.text-center small {
+    color: black; /* Change color to black */
+}

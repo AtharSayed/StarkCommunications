@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            background-image: url('{{ url_for("static", filename="images/loginpagewallpaperbacg.jpg") }}');
+            background-size: cover; /* Cover the entire background */
+            background-position: center; /* Center the background image */
+            height: 100vh; /* Full viewport height */
+            color: white; /* Change text color to white for visibility */
+        }
+        .card {
+            max-width: 400px; /* Max width for card */
+            width: 90%; /* Responsive width */
+        }
+        .card-body {
+            display: flex;                
+            flex-direction: column;       
+            align-items: center;          
+            justify-content: center;      
+        }
+        .logo-img {
+            max-width: 80%;               
+            height: auto;                 
+        }
+    </style>
+</head>
+<body>
+    <div class="container d-flex align-items-center justify-content-center vh-100">
+        <div class="card shadow">
+            <div class="card-body text-center">
+                <img src="{{ url_for('static', filename='images/1200px-Stark_Industries.png') }}" alt="Logo" class="logo-img mb-3"> 
+                <h5 class="card-title">Create Account</h5>
+                <form method="POST" action="{{ url_for('signup') }}" onsubmit="return validatePassword()">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" class="form-control" id="username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                        <small id="passwordHelp" class="form-text text-muted">Password must be at least 8 characters long and include uppercase, lowercase, numbers, and special characters.</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+                    <div class="text-center mt-3">
+                        <small>Already have an account? <a href="{{ url_for('login') }}">Login here</a></small>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function validatePassword() {
+            const password = document.getElementById('password').value;
+            const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+            if (!regex.test(password)) {
+                alert('Password must be at least 8 characters long and include uppercase, lowercase, numbers, and special characters.');
+                return false;
+            }
+            return true;
+        }
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
