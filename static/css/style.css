@@ -54,3 +54,61 @@ small a:hover {
 .text-center small {
     color: black; /* Change color to black */
 }
+
+/* Chat container */
+.chat-container {
+    max-width: 800px; /* Maximum width for chat */
+    width: 90%; /* Responsive width */
+    margin: auto; /* Center the container */
+    border-radius: 15px; /* Rounded corners */
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); /* Light shadow */
+    background: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+    display: flex;
+    flex-direction: column;
+    height: 80%; /* Responsive height */
+}
+
+/* Chat window */
+.chat-window {
+    flex-grow: 1; /* Allow chat window to grow */
+    overflow-y: auto; /* Enable scrolling */
+    padding: 20px; /* Padding inside chat window */
+    border: 1px solid #ccc; /* Border for chat window */
+    border-radius: 0 0 15px 15px; /* Rounded corners on bottom */
+    background-color: #ffffff; /* White background for messages */
+}
+
+/* Message styles */
+.message {
+    padding: 10px; /* Padding for each message */
+    border-radius: 10px; /* Rounded corners for messages */
+    margin-bottom: 10px; /* Space between messages */
+    max-width: 75%; /* Limit width */
+    word-wrap: break-word; /* Ensure long words break properly */
+}
+
+/* Sent message style */
+.message.sent {
+    background-color: #007bff; /* Sent message background */
+    color: white; /* Sent message text color */
+    align-self: flex-end; /* Align sent messages to the right */
+}
+
+/* Received message style */
+.message.received {
+    background-color: #e5e5ea; /* Received message background */
+    color: black; /* Received message text color */
+    align-self: flex-start; /* Align received messages to the left */
+}
+
+/* Input group styles */
+.input-group {
+    margin-top: 10px; /* Space above input group */
+}
+
+/* Emoji button style */
+#emoji-button {
+    background-color: transparent; /* Transparent background */
+    border: none; /* No border */
+    cursor: pointer; /* Pointer cursor */
+}
