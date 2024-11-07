@@ -74,9 +74,44 @@
         }
     </style>
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/emoji-button@3.3.0/dist/index.min.js"></script>
     <script>
-        // JavaScript code as shown above
+        var socket = io.connect('http://127.0.0.1:5000');  // Adjust if needed
+        var username = "{{ username }}";  // Injected from Flask template
+
+        // Listen for incoming messages
+        socket.on('chat message', function(data) {
+            if (data.recipient === username) {
+                var chatWindow = document.getElementById('chat-window');
+                var messageDiv = document.createElement('div');
+                messageDiv.classList.add('message', 'received');
+                messageDiv.textContent = `${data.sender}: ${data.message}`;
+                chatWindow.appendChild(messageDiv);
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+            }
+        });
+
+        function sendMessage() {
+            var recipient = document.getElementById('recipient').value;
+            var message = document.getElementById('message').value;
+
+            if (recipient && message) {
+                socket.emit('send_message', {
+                    sender: username,
+                    recipient: recipient,
+                    message: message
+                });
+
+                var chatWindow = document.getElementById('chat-window');
+                var messageDiv = document.createElement('div');
+                messageDiv.classList.add('message', 'sent');
+                messageDiv.textContent = `You: ${message}`;
+                chatWindow.appendChild(messageDiv);
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+
+                document.getElementById('message').value = '';
+                document.getElementById('recipient').value = '';
+            }
+        }
     </script>
 </head>
 <body>
@@ -101,9 +136,5 @@
             </div>
         </div>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
