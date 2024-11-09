@@ -44,6 +44,9 @@ chat_app/
 
 6) Forcing users to create strong passwords using different symbol combinations 
 
+7) WebSocket's is used for message exchange between the users 
+  Since WebSocket's provide the functionality of bidirectional message exchange between the two entities or multiple entities 
+
 
 --> Technologies Used :
 
