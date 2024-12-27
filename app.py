@@ -68,6 +68,13 @@ def chat():
         return redirect(url_for('login'))  # Redirect to login if user is not logged in
     return render_template('chat.html', username=session['username'])  # Render chat page
 
+# Route for the video call page
+@app.route('/video_call')
+def video_call():
+    if 'username' not in session:
+        return redirect(url_for('login'))  # Redirect to login if user is not logged in
+    return render_template('video_call.html', username=session['username'])  # Render video call page
+
 # Handle new socket connection
 @socketio.on('connect')
 def handle_connect():
@@ -110,4 +117,3 @@ def handle_disconnect():
 
 if __name__ == '__main__':
     socketio.run(app, debug=True, allow_unsafe_werkzeug=True)  # Run the app with SocketIO
-

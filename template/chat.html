@@ -72,6 +72,11 @@
             display: flex;
             align-items: center;
         }
+        /* Adjusted margin-top for the switch button */
+        .switch-video-btn {
+            margin-top: 10px; /* Adjusted to bring the button up */
+            text-align: center;
+        }
     </style>
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
     <script>
@@ -112,6 +117,11 @@
                 document.getElementById('recipient').value = '';
             }
         }
+
+        // Redirect to video call page
+        function switchToVideoCall() {
+            window.location.href = '/video_call';  // Change this route based on your Flask route
+        }
     </script>
 </head>
 <body>
@@ -133,6 +143,10 @@
                 <div class="input-group-append">
                     <button class="btn btn-primary" onclick="sendMessage()">Send</button>
                 </div>
+            </div>
+            <!-- Switch to Video Call Button -->
+            <div class="switch-video-btn">
+                <button class="btn btn-success" onclick="switchToVideoCall()">Switch to Video Call</button>
             </div>
         </div>
     </div>

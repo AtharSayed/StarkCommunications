@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Call</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <style>
+        body {
+            background-image: url('{{ url_for("static", filename="images/chatwallpaperbcg.jpg") }}');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            color: white;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .video-call-container {
+            max-width: 800px;
+            width: 100%;
+            margin: auto;
+            border-radius: 15px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(200, 200, 200, 0.8));
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+        .video-header {
+            background-color: #007bff;
+            padding: 15px;
+            border-radius: 15px 15px 0 0;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        .video-window {
+            flex-grow: 1;
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            gap: 20px;
+        }
+        #local-video, #remote-video {
+            width: 100%;
+            max-width: 400px; /* Ensures video width doesn’t overflow */
+            height: auto; /* Maintain aspect ratio */
+            border: 1px solid #ccc;
+            background-color: black;
+        }
+        .controls {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .controls button {
+            margin: 10px;
+        }
+        .switch-video-btn {
+            margin-top: 10px;
+            text-align: center;
+        }
+        @media (max-width: 768px) {
+            .video-window {
+                flex-direction: column;
+                align-items: center;
+            }
+            #local-video, #remote-video {
+                max-width: 90%; /* Make videos smaller on smaller screens */
+            }
+        }
+    </style>
+    <script>
+        var socket = io.connect('http://127.0.0.1:5000'); // Adjust if needed
+        var username = "{{ username }}";  // Injected from Flask template
+
+        var localStream;
+        var peerConnection;
+        var remoteStream;
+        var constraints = {
+            video: true,
+            audio: true
+        };
+
+        // Listen for offer from other user
+        socket.on('video_call_offer', function(data) {
+            if (data.to === username) {
+                startCall(data.from);
+                peerConnection.setRemoteDescription(new RTCSessionDescription(data.offer));
+                createAnswer();
+            }
+        });
+
+        // Listen for answer from the other user
+        socket.on('video_call_answer', function(data) {
+            if (data.to === username) {
+                peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
+            }
+        });
+
+        // Listen for ICE candidate
+        socket.on('ice_candidate', function(data) {
+            if (data.to === username) {
+                peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate));
+            }
+        });
+
+        // Start video call when the button is clicked
+        function startCall(remoteUsername) {
+            navigator.mediaDevices.getUserMedia(constraints)
+                .then(function(stream) {
+                    localStream = stream;
+                    document.getElementById('local-video').srcObject = localStream;
+                    peerConnection = new RTCPeerConnection();
+                    peerConnection.addStream(localStream);
+
+                    peerConnection.onaddstream = function(event) {
+                        remoteStream = event.stream;
+                        document.getElementById('remote-video').srcObject = remoteStream;
+                    };
+
+                    peerConnection.onicecandidate = function(event) {
+                        if (event.candidate) {
+                            socket.emit('ice_candidate', {
+                                to: remoteUsername,
+                                candidate: event.candidate
+                            });
+                        }
+                    };
+
+                    peerConnection.createOffer()
+                        .then(function(offer) {
+                            return peerConnection.setLocalDescription(offer);
+                        })
+                        .then(function() {
+                            socket.emit('video_call_offer', {
+                                to: remoteUsername,
+                                from: username,
+                                offer: peerConnection.localDescription
+                            });
+                        })
+                        .catch(function(error) {
+                            console.log("Error creating offer: ", error);
+                        });
+                })
+                .catch(function(error) {
+                    console.log("Error accessing media devices: ", error);
+                });
+        }
+
+        // Respond to incoming call with an answer
+        function createAnswer() {
+            peerConnection.createAnswer()
+                .then(function(answer) {
+                    return peerConnection.setLocalDescription(answer);
+                })
+                .then(function() {
+                    socket.emit('video_call_answer', {
+                        to: username,
+                        from: username,
+                        answer: peerConnection.localDescription
+                    });
+                })
+                .catch(function(error) {
+                    console.log("Error creating answer: ", error);
+                });
+        }
+
+        // End video call
+        function endCall() {
+            peerConnection.close();
+            localStream.getTracks().forEach(function(track) {
+                track.stop();
+            });
+            document.getElementById('local-video').srcObject = null;
+            document.getElementById('remote-video').srcObject = null;
+        }
+
+        // Initiate a call on button click (Replace with your logic for selecting a user)
+        function initiateCall() {
+            var remoteUsername = prompt("Enter the username of the person you want to call:");
+            if (remoteUsername) {
+                startCall(remoteUsername);
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="video-call-container">
+        <div class="video-header">
+            <h4>Video Call with {{ username }}</h4>
+        </div>
+
+        <div class="video-window">
+            <div class="local-video">
+                <h5>Your Video</h5>
+                <video id="local-video" autoplay muted></video>
+            </div>
+            <div class="remote-video">
+                <h5>Remote Video</h5>
+                <video id="remote-video" autoplay></video>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-primary" onclick="initiateCall()">Start Call</button>
+            <button class="btn btn-danger" onclick="endCall()">End Call</button>
+        </div>
+        <div class="switch-video-btn">
+            <button class="btn btn-success" onclick="switchToVideoCall()">Switch to Chat</button>
+        </div>
+    </div>
+</body>
+</html>
