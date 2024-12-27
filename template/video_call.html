@@ -86,7 +86,8 @@
         // Listen for offer from other user
         socket.on('video_call_offer', function(data) {
             if (data.to === username) {
-                startCall(data.from);
+                console.log("Received video call offer from: " + data.from);
+                startCall(data.from);  // Start call with the correct user
                 peerConnection.setRemoteDescription(new RTCSessionDescription(data.offer));
                 createAnswer();
             }
@@ -95,6 +96,7 @@
         // Listen for answer from the other user
         socket.on('video_call_answer', function(data) {
             if (data.to === username) {
+                console.log("Received answer from: " + data.from);
                 peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
             }
         });
@@ -102,6 +104,7 @@
         // Listen for ICE candidate
         socket.on('ice_candidate', function(data) {
             if (data.to === username) {
+                console.log("Received ICE candidate from: " + data.from);
                 peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate));
             }
         });
@@ -124,6 +127,7 @@
                         if (event.candidate) {
                             socket.emit('ice_candidate', {
                                 to: remoteUsername,
+                                from: username,  // Added 'from' to identify who is sending
                                 candidate: event.candidate
                             });
                         }

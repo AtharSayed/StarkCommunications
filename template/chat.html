@@ -79,9 +79,25 @@
         }
     </style>
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/emoji-button@3.3.0/dist/emoji-button.min.js"></script>
     <script>
         var socket = io.connect('http://127.0.0.1:5000');  // Adjust if needed
         var username = "{{ username }}";  // Injected from Flask template
+
+        // Initialize the emoji picker
+        const picker = new EmojiButton();
+        const emojiButton = document.getElementById('emoji-button');
+        const messageInput = document.getElementById('message');
+
+        // Open emoji picker when emoji button is clicked
+        emojiButton.addEventListener('click', () => {
+            picker.togglePicker(emojiButton);
+        });
+
+        // Insert selected emoji into the message input field
+        picker.on('emoji', emoji => {
+            messageInput.value += emoji;
+        });
 
         // Listen for incoming messages
         socket.on('chat message', function(data) {
@@ -118,7 +134,7 @@
             }
         }
 
-        // Redirect to video call page
+        // Switch to Video Call page
         function switchToVideoCall() {
             window.location.href = '/video_call';  // Change this route based on your Flask route
         }
