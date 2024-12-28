@@ -13,14 +13,11 @@ chat_app/
 │   ├── css/
 │   │   └── style.css
 │   ├── images/
-│   │   ├── logo.png
-│   │   └── background.jpg
-│   └── js/
-│       ├── main.js
-│       └── script.js
+│   │   └── logo.png
+│   ├── js/
+│   │   └── main.js
+│   └── background.jpg
 └── README.md
-             
-
 
 
 --> How to Run :
