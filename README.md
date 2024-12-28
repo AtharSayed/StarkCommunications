@@ -9,6 +9,7 @@ chat_app/
 │   ├── login.html              
 │   └── signup.html
 │   └── video_call.html
+│
 ├── static/                     
 │   ├── css/                    
 │   │   └── style.css          
