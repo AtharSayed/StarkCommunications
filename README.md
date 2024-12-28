@@ -5,7 +5,7 @@ Chat application (StarkComm)
 chat_app/
 ├── app.py                      
 ├── templates/                  
-│   ├── index.html              
+│   ├── chat.html              
 │   ├── login.html              
 │   └── signup.html             
 ├── static/                     
